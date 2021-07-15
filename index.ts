@@ -18,6 +18,30 @@ enum Resize { finalWidth = 1400, finalHeight = 700 };
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+const clearFilePath = (filePath: string) => {
+  return new Promise(async (resolve, reject) => {
+      try {
+          let files = [];
+          if( fs.existsSync(filePath) ) {
+              files = fs.readdirSync(filePath);
+              files.forEach(function(file){
+                  let curPath = filePath + "/" + file;
+                  if(fs.statSync(curPath).isDirectory()) {
+                      clearFilePath(curPath);
+                  } else {
+                  fs.unlinkSync(curPath);
+                  }
+              });
+          fs.rmdirSync(filePath);
+          }
+          resolve('success');
+      } catch (error) {
+          console.log(`Error: ${error.message}`);
+          reject(error);
+      }
+  })
+}
+
 try{
   app.post(
     '/upload/dog/image',
