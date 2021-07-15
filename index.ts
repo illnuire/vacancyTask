@@ -83,6 +83,27 @@ const checkType = async(imgUrl: string) => {
   }
 };
 
+const resizePicture = (imgUrl: string, resizeFolder: string): Object => {
+  return new Promise((resolve, reject) =>
+  {
+      const fileName = path.basename(imgUrl);
+      const localFilePath = path.resolve(__dirname, resizeFolder, fileName);
+
+      let inputFile = __dirname + '/download/' + fileName;
+      let outputFile = localFilePath;
+
+      sharp(inputFile).resize({height: Resize.finalHeight, width: Resize.finalWidth}).toFile(outputFile)
+          .then(function (newFileInfo: any) {
+              console.log("Successfully resized");
+              resolve(newFileInfo);
+          })
+          .catch(function (error: any) {  
+              console.log(`Error: ${error.message}`);
+              reject(error);
+          });
+  });
+}
+
 try{
   app.post(
     '/upload/dog/image',
