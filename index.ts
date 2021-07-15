@@ -9,6 +9,11 @@ import { resolve } from 'path/posix';
 import { rejects } from 'assert/strict';
 import pool from './db';
 import imageToBase64 from 'image-to-base64';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
+let route = path.join(__dirname, '..', '/.env');
+dotenv.config({path: route});
 
 const app: Application = express();
 const port = 8000;
@@ -105,19 +110,17 @@ const resizePicture = (imgUrl: string, resizeFolder: string): Object => {
 }
 
 const convertPicture = (imgUrl: string) => {
-  return new Promise((resolve, reject) => {
-      imageToBase64(imgUrl)
-          .then((img64) => {
-              console.log(img64);
-              resolve(img64);
-          })
-          .catch(function (error: any) {
-              console.log(`Error: ${error.message}`);
-              reject(error);
-          })
-  })
+    return new Promise((resolve, reject) => {
+        imageToBase64(imgUrl)
+            .then((img64) => {
+                resolve(img64);
+            })
+            .catch(function (error: any) {
+                console.log(`Error: ${error.message}`);
+                reject(error);
+            })
+    })
 }
-
 try{
   app.post(
     '/upload/dog/image',
