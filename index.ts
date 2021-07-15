@@ -67,6 +67,22 @@ const downloadPicture = (fileUrl: string, downloadFolder: string) => {
   });
 }
 
+const checkType = async(imgUrl: string) => {
+  const type = await FileType.fromFile(__dirname + '/download/'+ path.basename(imgUrl));
+  if (['jpg', 'png'].includes(type.ext)) {
+      console.log(type.ext + ' type');
+      return {
+          isValid: true
+      }
+  } else {
+      console.log(type.ext + ' type');
+      clearFilePath(__dirname + '/download');
+      return {
+         isValid: false
+      }
+  }
+};
+
 try{
   app.post(
     '/upload/dog/image',
