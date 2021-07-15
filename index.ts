@@ -104,6 +104,20 @@ const resizePicture = (imgUrl: string, resizeFolder: string): Object => {
   });
 }
 
+const convertPicture = (imgUrl: string) => {
+  return new Promise((resolve, reject) => {
+      imageToBase64(imgUrl)
+          .then((img64) => {
+              console.log(img64);
+              resolve(img64);
+          })
+          .catch(function (error: any) {
+              console.log(`Error: ${error.message}`);
+              reject(error);
+          })
+  })
+}
+
 try{
   app.post(
     '/upload/dog/image',
