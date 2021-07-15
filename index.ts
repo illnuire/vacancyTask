@@ -42,6 +42,31 @@ const clearFilePath = (filePath: string) => {
   })
 }
 
+const downloadPicture = (fileUrl: string, downloadFolder: string) => {
+  return new Promise(async (resolve, reject) => {
+      const fileName = path.basename(fileUrl);
+      const localFilePath = path.resolve(__dirname, downloadFolder, fileName);
+  
+      try {
+          const response = await(axios.get(
+              fileUrl, {
+                  responseType: 'stream',
+              }
+          ));
+  
+          const w = response.data.pipe(fs.createWriteStream(localFilePath));
+          w.on('finish', () => {
+              resolve('success');
+              console.log('File downloaded');
+          });
+  
+      } catch (error) {
+          console.log(`Error: ${error.message}`);
+          reject(error)
+      }
+  });
+}
+
 try{
   app.post(
     '/upload/dog/image',
